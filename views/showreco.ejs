@@ -1,0 +1,134 @@
+<!DOCTYPE html>
+<html>
+  <head>
+    <title>CS286</title>
+    
+    <link rel='stylesheet' href='/stylesheets/style.css' />
+    <link rel='stylesheet' href='/bootstrap/css/bootstrap.min.css' />
+
+
+    <script src="http://code.jquery.com/jquery-1.11.0.min.js"></script>
+	<script src="http://code.jquery.com/jquery-migrate-1.2.1.min.js"></script>
+	<script src= "http://ajax.googleapis.com/ajax/libs/angularjs/1.2.26/angular.min.js"></script>
+	<script src="https://ajax.googleapis.com/ajax/libs/jquery/1.8.3/jquery.min.js"></script>
+	
+	<script src="https://ajax.googleapis.com/ajax/libs/angularjs/1.2.26/angular-route.min.js"></script>
+
+	<script src="/bootstrap/js/bootstrap.min.js"></script>
+	<script src="https://ajax.googleapis.com/ajax/libs/jquery/1.8.3/jquery.min.js"></script>
+
+  </head>
+  <body>
+  	<div ng-app="reco" ng-controller="showrecom" class="">
+	  	<nav class="navbar navbar-default navbar-fixed-top">
+	    	<div class="container-fluid">
+	        <div class="navbar-header">
+	          <button type="button" class="navbar-toggle collapsed" data-toggle="collapse" data-target="#shutternav" aria-expanded="false">
+	            <span class="sr-only">Toggle navigation</span>
+	            <span class="icon-bar"></span>
+	            <span class="icon-bar"></span>
+	            <span class="icon-bar"></span>
+	          </button>
+	          <a class="navbar-brand" href="#">CS286</a>
+	        </div>
+	        <div class="collapse navbar-collapse" id="shutternav">
+	          <ul class="nav navbar-nav navbar-right">
+	            <li><a href="">Home</a></li>
+	            <li><a href="">About Us</a></li>
+	            <li><a href="">Login</a></li>
+	            <li><a href="">SignUp</a></li>
+	          </ul>
+	        </div>
+	    	</div>
+	    </nav>
+	    <!-- <div class="container-fluid" style="margin-top:20px">
+	    	<div class="row shadow" >
+	    		<div class="col-sm-3 col-sm-offset-1" style="box-shadow: 0 0 10px black; height:300px;  border-radius:10px; margin-top:30px;" ng-repeat="products in items.Products" ng-click="openAlert(products.id)" adddivs>
+ 					<p> {{products.product}} </p>
+	    		</div>
+	    		<div class="col-sm-1" >
+ 					
+	    		</div>
+	    		<div class="col-sm-3" style="box-shadow: 0 0 30px black; height:300px; border-radius:10px">
+ 					<p> Item2 </p>
+	    		</div>
+	    		<div class="col-sm-1">
+ 					
+	    		</div>
+	    		<div class="col-sm-3"style="box-shadow: 0 0 30px black; height:300px; border-radius:10px">
+ 					<p> Item3 </p>
+	    		</div>
+	    		<div class="col-sm-1">
+ 					
+	    		</div>
+	    		
+	      		
+	    	</div>	
+	    </div> -->
+	    <initialarea></initialarea>
+	    <div class="container-fluid" style="margin-top:20px" >
+	    	<div class='row shadow' id='recocontents'></div>
+	    	
+	    </div>
+<script>
+	var app = angular.module("reco", []);
+
+	app.controller("showrecom", function($scope, $http, $location){
+			
+		$scope.items = {};
+		$scope.items.Products = [{id:1, product: 'Camera'},{id:2, product:'Books'},{id:3, product:'Umbrellas'},{id:4, product:'Clothes'}];
+		/*$scope.openAlert = function(id){
+			window.alert("clicked"+id);
+		};*/
+
+		$scope.openAlert = function(){
+				$http({
+					method : 'GET',
+					url : '/getreco',
+					//data : {"username" : $scope.username, "password" : $scope.password}
+				}).success(function(response){
+					//alert(JSON.stringify(response));
+					$scope.showre(response);
+				}).error(function(error){
+					alert("error");
+					console.log(error);
+				})
+			}
+		
+
+	});
+
+	app.directive("initialarea", function($compile){
+
+		return{
+			restrict: "E",
+			template: " <div class='container-fluid' style='margin-top:20px'>" + "<div class='row shadow'>" + "<div class='col-sm-3 col-sm-offset-1' style='box-shadow: 0 0 10px black; height:300px;  border-radius:10px; margin-top:30px;' ng-repeat='products in items.Products' ng-click='openAlert(products.id)'>" + "<p> {{products.product}} </p>" + "</div>" + "</div>" + "</div>",
+			controller: function($scope,  $element, $attrs){
+				$scope.showre = function(resposneP){
+
+					angular.element(document.getElementById("recocontents")).empty();
+					for(var i=0; i<resposneP.length; i++){
+						var dc = angular.element("<div />");
+						dc.addClass("col-sm-3 col-sm-offset-1");
+						dc.css('box-shadow','0 0 10px black');
+						dc.css('height', '300px');
+						dc.css('border-radius', '10px');
+						dc.css('margin-top', '30px');
+						//d.append(dc);
+						/*$element.find(".recocontents").append(d);
+						/*window.alert("clicked"+id);
+	*/
+						var p = angular.element("<p />");
+						p.text(resposneP[i].product);
+						dc.append(p);
+	                	angular.element(document.getElementById("recocontents")).append(dc);
+	                }
+
+					}
+			}
+
+		}
+	});
+</script>
+
+</html>
