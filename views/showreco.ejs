@@ -66,6 +66,7 @@
 	    	</div>	
 	    </div> -->
 	    <initialarea></initialarea>
+	    <h1>Your Recommendations</h1>
 	    <div class="container-fluid" style="margin-top:20px" >
 	    	<div class='row shadow' id='recocontents'></div>
 	    	
@@ -102,16 +103,16 @@
 
 		return{
 			restrict: "E",
-			template: " <div class='container-fluid' style='margin-top:20px'>" + "<div class='row shadow'>" + "<div class='col-sm-3 col-sm-offset-1' style='box-shadow: 0 0 10px black; height:300px;  border-radius:10px; margin-top:30px;' ng-repeat='products in items.Products' ng-click='openAlert(products.id)'>" + "<p> {{products.product}} </p>" + "</div>" + "</div>" + "</div>",
+			template: " <div class='container-fluid' style='margin-top:20px'>" + "<div class='row shadow'>" + "<div class='col-sm-2 col-sm-offset-1' style='box-shadow: 0 0 10px black; height:100px;  border-radius:10px; margin-top:30px;' ng-repeat='products in items.Products' ng-click='openAlert(products.id)'>" + "<p> {{products.product}} </p>" + "</div>" + "</div>" + "</div>",
 			controller: function($scope,  $element, $attrs){
 				$scope.showre = function(resposneP){
 
 					angular.element(document.getElementById("recocontents")).empty();
 					for(var i=0; i<resposneP.length; i++){
 						var dc = angular.element("<div />");
-						dc.addClass("col-sm-3 col-sm-offset-1");
+						dc.addClass("col-sm-2 col-sm-offset-1");
 						dc.css('box-shadow','0 0 10px black');
-						dc.css('height', '300px');
+						dc.css('height', '100px');
 						dc.css('border-radius', '10px');
 						dc.css('margin-top', '30px');
 						//d.append(dc);
