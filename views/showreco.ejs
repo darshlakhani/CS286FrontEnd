@@ -2,7 +2,7 @@
 <html>
   <head>
     <title>CS286</title>
-    
+    <meta name="viewport" content="width=device-width, initial-scale=1">
     <link rel='stylesheet' href='/stylesheets/style.css' />
     <link rel='stylesheet' href='/bootstrap/css/bootstrap.min.css' />
 
@@ -20,7 +20,7 @@
   </head>
   <body>
   	<div ng-app="reco" ng-controller="showrecom" class="">
-	  	<nav class="navbar navbar-default navbar-fixed-top">
+	  	<nav class="navbar navbar-inverse navbar-fixed-top">
 	    	<div class="container-fluid">
 	        <div class="navbar-header">
 	          <button type="button" class="navbar-toggle collapsed" data-toggle="collapse" data-target="#shutternav" aria-expanded="false">
@@ -32,6 +32,17 @@
 	          <a class="navbar-brand" href="#">CS286</a>
 	        </div>
 	        <div class="collapse navbar-collapse" id="shutternav">
+	          <ul class="nav navbar-nav navbar-right">
+        		<li>
+         			<form class="navbar-form navbar-left" role="search">
+        				<div class="form-group">
+        					<label class="inputUsername" class="col-sm-2 control-label pull-top"></label>
+          					<input type="text" ng-model="searchtxt" class="form-control" name="searchtxt" id="searchtxt" placeholder="Search Product">
+        				</div>
+          				<button ng-click="search()"><span class="glyphicons glyphicons-search"><img src='/images/glyphicons-28-search.png'></span></button>
+      				</form>
+        		</li>
+    		</ul>
 	          <ul class="nav navbar-nav navbar-right">
 	            <li><a href="">Home</a></li>
 	            <li><a href="">About Us</a></li>
@@ -67,15 +78,23 @@
 	    </div> -->
 	    <!-- <initialarea></initialarea> -->
 
-	     <div class='container-fluid' style='margin-top:20px'>
-	     	<div class='row shadow'><div class='col-sm-2 col-sm-offset-1' style='box-shadow: 0 0 10px black; height:100px;  border-radius:10px; margin-top:30px;' data-ng-repeat='products in items.Products' ng-click='openAlert(products)'>
-	     	 <p> {{products.product}} </p>
-	     	  <button ng-click='callreco()' ng-disabled='!products.clicked'>Get Recommendations</button>
-	     	</div> 
-	     </div><!-- </div> -->
+	    <div class='container-fluid' style='margin-top:20px'>
+	     	<div class='row shadow'>
+	     		<div class='col-sm-2 col-sm-offset-1' style='box-shadow: 0 0 10px blue; height:150px;  border-radius:10px; margin-top:30px; background-color:#00004d;' data-ng-repeat='products in items.Products' ng-click='openAlert(products)'>
+	     	 		<p class="text-primary changesize"> {{products.product}} </p><br><br>
+	     	 		<button ng-click='callreco()' ng-disabled='!products.clicked' class="btn btn-primary">Recommendations for {{products.product}} </button>
+	     		</div> 
+	     </div>
+	     <!-- <div class='row shadow'>
+	     		<div class='col-sm-2 col-sm-offset-1' style='margin-top:30px;' data-ng-repeat='products in items.Products' >
+	     	 		
+	     		</div> 
+	     </div>
+	      -->
+	    </div>
 
-
-	    <h1>Your Recommendations</h1>
+	    <br>
+	    <h1 style="color:#00284d;">Your Recommendations:</h1>
 	    <div class="container-fluid" style="margin-top:20px" >
 	    	<div class='row shadow' id='recocontents'></div>
 	    	
@@ -110,7 +129,7 @@
 					for(var i=0; i<response.length; i++){
 						var dc = angular.element("<div />");
 						dc.addClass("col-sm-2 col-sm-offset-1");
-						dc.css('box-shadow','0 0 10px black');
+						dc.css('box-shadow','0 0 10px blue');
 						dc.css('height', '100px');
 						dc.css('border-radius', '10px');
 						dc.css('margin-top', '30px');
@@ -118,8 +137,9 @@
 						//$element.find(".recocontents").append(d);
 						//window.alert("clicked"+id);
 	
-						var p = angular.element("<p />");
+						var p = angular.element("<h2 />");
 						p.text(response[i].product);
+						p.addClass("text-primary");
 						dc.append(p);
 	                	angular.element(document.getElementById("recocontents")).append(dc);
 	                }
@@ -130,6 +150,10 @@
 				});
 
 			
+		} // end of callreco
+
+		$scope.search = function(){
+
 		}
 		
 
