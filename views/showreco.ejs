@@ -56,17 +56,17 @@
 
 	    <div class='container-fluid' style='margin-top:20px'>
 	     	<div class='row shadow'>
-	     		<div class='col-sm-2 col-sm-offset-1' style='box-shadow: 0 0 10px blue; height:150px;  border-radius:10px; margin-top:30px; background-color:#00004d;' data-ng-repeat='products in items.Products' ng-click='openAlert(products)'>
-	     	 		<p class="text-primary changesize"> {{products.product}} </p><br><br>
-	     	 		<button ng-click='callreco()' ng-disabled='!products.clicked' class="btn btn-primary">Recommendations for {{products.product}} </button>
-	     		</div> 
+	     		<div class='col-sm-2 col-sm-offset-1' style='box-shadow: 0 0 10px blue; height:150px;  border-radius:10px; margin-top:30px; background-color:#00004d;' data-ng-repeat='manufacturer in items.Products' ng-click='openAlert(manufacturer)'>
+	     	 		<p class="text-primary changesize"> {{manufacturer.manufacturer}} </p><br><br>
+				</div>
 	     	</div>
-	     <!-- <div class='row shadow'>
-	     		<div class='col-sm-2 col-sm-offset-1' style='margin-top:30px;' data-ng-repeat='products in items.Products' >
-	     	 		
-	     		</div> 
+	    <div class='row shadow'>
+	     		<div class='col-sm-2 col-sm-offset-1' style='margin-top:30px;' data-ng-repeat='manufacturer in items.Products' >
+					<button ng-click='callreco()' ng-disabled='!manufacturer.clicked' class="btn btn-primary">Recommendations for {{manufacturer.manufacturer}} </button>
+
+				</div>
 	     </div>
-	      -->
+
 	    </div>
 
 	    <br>
@@ -77,99 +77,107 @@
 	    </div>
 	</div>
 </body>
-	 
-<script>
-	var app = angular.module("reco", []);
+  <script>
+	  var app = angular.module("reco", []);
 
-	app.controller("showrecom", function($scope, $http, $location, $timeout ){
-			
-		$scope.items = {};
-		$scope.items.Products = [{id:1, product: 'Camera'},{id:2, product:'Books'},{id:3, product:'Umbrellas'},{id:4, product:'Clothes'}];
+	  app.controller("showrecom", function($scope, $http, $location, $timeout ){
 
-		/*$scope.openAlert = function(id){
-			window.alert("clicked"+id);
-		};*/
+		  $scope.items = {};
+		  $scope.items.Products = [{id:1, manufacturer: 'topics entertainment'},{id:2, manufacturer:'the learning company'},{id:3, manufacturer:'extensis corporation'},{id:4, manufacturer:'broderbund'}];
 
-		$scope.openAlert = function(products){
-				/**/
-				//console.log(product);
-				$timeout(function() {products.clicked=true}, 1000);
-			}
+		  /*$scope.openAlert = function(id){
+		   window.alert("clicked"+id);
+		   };*/
 
-		$scope.callreco = function(){
+		  $scope.openAlert = function(manufacturer){
+			  /**/
+			  console.log(manufacturer.manufacturer);
+			  $http({
+				  method: 'POST',
+				  url: 'http://localhost:8080/userclick',
+				  data: {"user_id":"adwant", "manufacturer": manufacturer.manufacturer}
+			  }).success(function (response) {
+				  alert("Your recommendation is on it's way");
 
-
-			$http({
-					method : 'GET',
-					url : '/getreco',
-					//data : {"username" : $scope.username, "password" : $scope.password}
-				}).success(function(response){
-					angular.element(document.getElementById("recocontents")).empty();
-					for(var i=0; i<response.length; i++){
-						var dc = angular.element("<div />");
-						dc.addClass("col-sm-2 col-sm-offset-1");
-						dc.css('box-shadow','0 0 10px blue');
-						dc.css('height', '100px');
-						dc.css('border-radius', '10px');
-						dc.css('margin-top', '30px');
-						//d.append(dc);
-						//$element.find(".recocontents").append(d);
-						//window.alert("clicked"+id);
-	
-						var p = angular.element("<h2 />");
-						p.text(response[i].product);
-						p.addClass("text-primary");
-						dc.append(p);
-	                	angular.element(document.getElementById("recocontents")).append(dc);
-	                }
-
-				}).error(function(error){
-					alert("error");
-					console.log(error);
-				});
-
-			
-		} // end of callreco
-
-		$scope.search = function(){
-
-		}
-		
-
-	});
-
-	/*app.directive("initialarea", function($compile){
-
-		return{
-			restrict: "E",
-			template: " <div class='container-fluid' style='margin-top:20px'>" + "<div class='row shadow'>" + "<div class='col-sm-2 col-sm-offset-1' style='box-shadow: 0 0 10px black; height:100px;  border-radius:10px; margin-top:30px;' ng-repeat='products in items.Products' ng-click='openAlert(products.id)'>" + "<p> {{products.product}} </p> <button ng-click='callreco' ng-disabled='!buttondisabled'>Get Recommendations</button> " + "</div>" + "</div>" + "</div>",
-			controller: function($scope,  $element, $attrs){
-				$scope.showre = function(){
+			  }).error(function (error) {
+				  alert("error");
+			  });
 
 
-					angular.element(document.getElementById("recocontents")).empty();
-					for(var i=0; i<resposneP.length; i++){
-						var dc = angular.element("<div />");
-						dc.addClass("col-sm-2 col-sm-offset-1");
-						dc.css('box-shadow','0 0 10px black');
-						dc.css('height', '100px');
-						dc.css('border-radius', '10px');
-						dc.css('margin-top', '30px');
-						//d.append(dc);
-						/*$element.find(".recocontents").append(d);
-						/*window.alert("clicked"+id);
-	
-						var p = angular.element("<p />");
-						p.text(resposneP[i].product);
-						dc.append(p);
-	                	angular.element(document.getElementById("recocontents")).append(dc);
-	                }
 
-					}
-			}
+			  $timeout(function() {manufacturer.clicked=true}, 1000);
+		  }
 
-		}
-	});*/
-</script>
+		  $scope.callreco = function(){
+
+
+			  $http({
+				  method : 'GET',
+				  url : 'http://localhost:8080/userrecommendation?userid=adwant',
+				  //data : {"username" : $scope.username, "password" : $scope.password}
+			  }).success(function(response){
+				  angular.element(document.getElementById("recocontents")).empty();
+				  for(var i=0; i<response.length; i++){
+					  var dc = angular.element("<div />");
+					  dc.addClass("col-sm-2 col-sm-offset-1");
+					  dc.css('box-shadow','0 0 10px blue');
+					  dc.css('height', '100px');
+					  dc.css('border-radius', '10px');
+					  dc.css('margin-top', '30px');
+					  //d.append(dc);
+					  //$element.find(".recocontents").append(d);
+					  //window.alert("clicked"+id);
+
+					  var p = angular.element("<p />");
+					  p.text(response[i].manufacturer);
+					  p.addClass("text-primary");
+					  dc.append(p);
+					  angular.element(document.getElementById("recocontents")).append(dc);
+				  }
+
+			  }).error(function(error){
+				  alert("error");
+				  console.log(error);
+			  });
+
+
+		  }
+
+
+	  });
+
+	  /*app.directive("initialarea", function($compile){
+
+	   return{
+	   restrict: "E",
+	   template: " <div class='container-fluid' style='margin-top:20px'>" + "<div class='row shadow'>" + "<div class='col-sm-2 col-sm-offset-1' style='box-shadow: 0 0 10px black; height:100px;  border-radius:10px; margin-top:30px;' ng-repeat='products in items.Products' ng-click='openAlert(products.id)'>" + "<p> {{products.product}} </p> <button ng-click='callreco' ng-disabled='!buttondisabled'>Get Recommendations</button> " + "</div>" + "</div>" + "</div>",
+	   controller: function($scope,  $element, $attrs){
+	   $scope.showre = function(){
+
+
+	   angular.element(document.getElementById("recocontents")).empty();
+	   for(var i=0; i<resposneP.length; i++){
+	   var dc = angular.element("<div />");
+	   dc.addClass("col-sm-2 col-sm-offset-1");
+	   dc.css('box-shadow','0 0 10px black');
+	   dc.css('height', '100px');
+	   dc.css('border-radius', '10px');
+	   dc.css('margin-top', '30px');
+	   //d.append(dc);
+	   /*$element.find(".recocontents").append(d);
+	   /*window.alert("clicked"+id);
+
+	   var p = angular.element("<p />");
+	   p.text(resposneP[i].product);
+	   dc.append(p);
+	   angular.element(document.getElementById("recocontents")).append(dc);
+	   }
+
+	   }
+	   }
+
+	   }
+	   });*/
+  </script>
 
 </html>
